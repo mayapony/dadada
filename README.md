@@ -1,14 +1,12 @@
-# Expo Router Example
+# DADADA
 
-Use [`expo-router`](https://expo.github.io/router) to build native navigation using files in the `app/` directory.
+这是一个吉他节拍器，基于 `React Native` 开发
 
-## 🚀 How to use
+TODO List:
 
-```sh
-npx create-expo-app -e with-router
-```
-
-## 📝 Notes
-
-- [Expo Router: Docs](https://expo.github.io/router)
-- [Expo Router: Repo](https://github.com/expo/router)
+- [ ] 速度调节
+- [ ] 节拍类型选择 (4/4 2/4 1/4 8/4...)
+- [ ] Pattern 选择
+- [ ] 保存一个设置
+- [ ] 录音
+- [ ] 记录练习时长

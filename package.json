@@ -7,11 +7,12 @@
   },
   "dependencies": {
     "expo": "^48.0.7",
+    "expo-av": "^13.2.1",
     "expo-constants": "~14.2.1",
     "expo-linking": "~4.0.1",
-    "expo-router": "^1.2.0",
+    "expo-router": "^1.5.3",
     "expo-splash-screen": "~0.18.1",
-    "expo-status-bar": "~1.4.2",
+    "expo-status-bar": "~1.4.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.71.3",
@@ -23,7 +24,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
-    "@babel/plugin-proposal-export-namespace-from": "^7.18.9"
+    "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
+    "eslint": "^8.42.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-native": "^4.0.0"
   },
   "resolutions": {
     "metro": "^0.73.7",
