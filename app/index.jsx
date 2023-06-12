@@ -9,12 +9,24 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import BpmChanger from "../components/bpm-changer/BpmChanger";
 import { DARK_THEME } from "../constants/theme";
+import { bpmToMs } from "../utils";
 
 export default function Home() {
   const [current, setCurrent] = useState(1);
   const [intervalId, setIntervalId] = useState(null);
   const [sound, setSound] = useState();
+  const soundFile = require("../assets/metronome.mp3");
+  const [bpm, setBpm] = useState(60);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  function handleUpdateBpm(increment) {
+    setBpm((b) => b + increment);
+    clearInterval(intervalId);
+    setIntervalId(null);
+    startInterval();
+  }
 
   useEffect(() => {
     return sound
@@ -27,9 +39,7 @@ export default function Home() {
 
   async function playSound() {
     console.log("Loading Sound");
-    const { sound } = await Audio.Sound.createAsync(
-      require("../assets/metronome.mp3")
-    );
+    const { sound } = await Audio.Sound.createAsync(soundFile);
     setSound(sound);
 
     console.log("Playing Sound");
@@ -39,13 +49,16 @@ export default function Home() {
   async function handleStartPress() {
     if (intervalId) {
       clearInterval(intervalId);
-      setIntervalId(undefined);
+      setIntervalId(null);
       setCurrent(1);
       return;
     }
 
-    await playSound();
+    startInterval();
+  }
 
+  async function startInterval() {
+    await playSound();
     const interval = setInterval(async () => {
       await playSound();
       setCurrent((prev) => {
@@ -55,7 +68,7 @@ export default function Home() {
           return (prev += 1);
         }
       });
-    }, 1000);
+    }, bpmToMs(bpm));
 
     setIntervalId(interval);
   }
@@ -94,14 +107,18 @@ export default function Home() {
           })}
         </View>
 
-        <TouchableOpacity
-          style={styles.switchButton}
-          onPress={handleStartPress}
-        >
-          <Text style={styles.switchButtonText}>
-            {!!intervalId ? "暂 停" : "开 始"}
-          </Text>
-        </TouchableOpacity>
+        <View style={{ gap: 30 }}>
+          <BpmChanger handleUpdateBpm={handleUpdateBpm} bpm={bpm} />
+
+          <TouchableOpacity
+            style={styles.switchButton}
+            onPressIn={handleStartPress}
+          >
+            <Text style={styles.switchButtonText}>
+              {!!intervalId ? "暂 停" : "开 始"}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -175,7 +192,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   switchButtonText: {
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "bold",
     color: DARK_THEME.pink,
   },
