@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { DARK_THEME } from "../../constants/theme";
-import { styles } from "./styles";
+import { DARK_THEME } from "../constants/theme";
+import { styles } from "../styles/bpm-changer.style";
 
 function BpmChanger({ handleUpdateBpm, bpm }) {
   return (

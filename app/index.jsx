@@ -1,66 +1,75 @@
 import { Audio } from "expo-av";
 import { Stack } from "expo-router";
-import { useEffect, useState } from "react";
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { useRef, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import BpmChanger from "../components/bpm-changer/BpmChanger";
+import { useEffect } from "react/cjs/react.development";
+import BpmChanger from "../components/BpmChanger";
+import Flag from "../components/Flag";
 import { DARK_THEME } from "../constants/theme";
+import { styles } from "../styles/home.style";
 import { bpmToMs } from "../utils";
+
+const soundFile = require("../assets/metronome.mp3");
 
 export default function Home() {
   const [current, setCurrent] = useState(1);
   const [intervalId, setIntervalId] = useState(null);
-  const [sound, setSound] = useState();
-  const soundFile = require("../assets/metronome.mp3");
   const [bpm, setBpm] = useState(60);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isStarted, setIsStarted] = useState(false);
+  const soundRef = useRef(null);
 
   function handleUpdateBpm(increment) {
     setBpm((b) => b + increment);
-    clearInterval(intervalId);
-    setIntervalId(null);
-    startInterval();
   }
 
   useEffect(() => {
-    return sound
-      ? () => {
-          console.log("Unloading Sound");
-          sound.unloadAsync();
-        }
-      : undefined;
-  }, [sound]);
+    if (isStarted) {
+      clearInterval(intervalId);
+      const interval = setInterval(async () => {
+        playSound();
+        setCurrent((prev) => {
+          if (prev === 4) {
+            return 1;
+          } else {
+            return (prev += 1);
+          }
+        });
+      }, bpmToMs(bpm));
+
+      setIntervalId(interval);
+    }
+  }, [bpm]);
 
   async function playSound() {
-    console.log("Loading Sound");
     const { sound } = await Audio.Sound.createAsync(soundFile);
-    setSound(sound);
-
-    console.log("Playing Sound");
+    soundRef.current = sound;
     await sound.playAsync();
   }
 
   async function handleStartPress() {
-    if (intervalId) {
+    console.log(isStarted);
+    // if started then stop
+    if (isStarted) {
+      console.log("Unloading Sound");
+      if (soundRef.current) soundRef.current.unloadAsync();
       clearInterval(intervalId);
       setIntervalId(null);
       setCurrent(1);
-      return;
+    } else {
+      // else then start
+      startInterval();
     }
 
-    startInterval();
+    setIsStarted((is) => !is);
   }
 
   async function startInterval() {
-    await playSound();
+    // soundRef.current = sound;
+    // await sound.playAsync();
+    playSound();
     const interval = setInterval(async () => {
-      await playSound();
+      playSound();
       setCurrent((prev) => {
         if (prev === 4) {
           return 1;
@@ -87,35 +96,17 @@ export default function Home() {
         }}
       />
       <View style={styles.homeContainer}>
-        <View style={styles.iconsContainer}>
-          {[1, 2, 3, 4].map((number) => {
-            return (
-              <View
-                style={current === number ? styles.activeIcon : styles.icon}
-                id={`block-${number}`}
-                key={number}
-              >
-                <Text
-                  style={
-                    current === number ? styles.activeIconText : styles.iconText
-                  }
-                >
-                  {number}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
-
-        <View style={{ gap: 30 }}>
+        <Flag current={current} />
+        <View
+          style={{ gap: 30, justifyContent: "center", alignItems: "center" }}
+        >
           <BpmChanger handleUpdateBpm={handleUpdateBpm} bpm={bpm} />
-
           <TouchableOpacity
             style={styles.switchButton}
             onPressIn={handleStartPress}
           >
             <Text style={styles.switchButtonText}>
-              {!!intervalId ? "暂 停" : "开 始"}
+              {!!isStarted ? "暂 停" : "开 始"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -123,77 +114,3 @@ export default function Home() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  homeArea: {
-    flex: 1,
-    backgroundColor: DARK_THEME.base,
-    height: "100%",
-  },
-  homeContainer: {
-    flexDirection: "column",
-    paddingLeft: 10,
-    paddingRight: 10,
-    height: "100%",
-    justifyContent: "space-between",
-  },
-  iconsContainer: {
-    backgroundColor: DARK_THEME.surface0,
-    flexDirection: "row",
-    display: "flex",
-    justifyContent: "space-evenly",
-    paddingTop: 20,
-    paddingBottom: 20,
-    borderRadius: 10,
-  },
-  icon: {
-    borderRadius: "50%",
-    backgroundColor: DARK_THEME.overlay0,
-    borderRadius:
-      Math.round(
-        Dimensions.get("window").width + Dimensions.get("window").height
-      ) / 2,
-    width: Dimensions.get("window").width * 0.18,
-    height: Dimensions.get("window").width * 0.18,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  activeIcon: {
-    borderRadius: "50%",
-    borderRadius:
-      Math.round(
-        Dimensions.get("window").width + Dimensions.get("window").height
-      ) / 2,
-    width: Dimensions.get("window").width * 0.18,
-    height: Dimensions.get("window").width * 0.18,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: DARK_THEME.pink,
-  },
-  iconText: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: DARK_THEME.text,
-  },
-  activeIconText: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: DARK_THEME.base,
-  },
-  switchButton: {
-    width: "90%",
-    paddingTop: 20,
-    paddingBottom: 20,
-    alignSelf: "center",
-    borderRadius: 10,
-    backgroundColor: DARK_THEME.surface0,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 30,
-  },
-  switchButtonText: {
-    fontSize: 25,
-    fontWeight: "bold",
-    color: DARK_THEME.pink,
-  },
-});
