@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react-native",
+    "baseUrl": ".",
+    "paths": {
+      "utils": ["utils/*"],
+      "components": ["components/*"],
+      "styles": ["styles/*"],
+      "constants": ["constants/*"]
+    }
+  },
+  "exclude": ["node_modules"]
+}
