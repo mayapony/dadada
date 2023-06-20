@@ -1,10 +1,21 @@
 {
   "expo": {
-    "scheme": "acme",
-    "web": {
-      "bundler": "metro"
+    "android": {
+      "package": "com.maya.dadada"
+    },
+    "assembleRelease": [
+      "assets/*"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "420dd410-35e5-4d07-938b-a4a593dcd013"
+      }
     },
     "name": "dadada",
-    "slug": "dadada"
+    "scheme": "acme",
+    "slug": "dadada",
+    "web": {
+      "bundler": "metro"
+    }
   }
 }

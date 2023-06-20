@@ -1,58 +1,49 @@
+import soundFile from "assets/metronome.mp3";
 import BpmChanger from "components/BpmChanger";
 import Flag from "components/Flag";
 import { DARK_THEME } from "constants/theme";
 import { Audio } from "expo-av";
 import { Stack } from "expo-router";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { styles } from "styles/home.style";
 import { bpmToMs } from "utils";
 
-const soundFile = require("../assets/metronome.mp3");
+let soundAudio;
+
+async function prepareSounds() {
+  try {
+    const { sound } = await Audio.Sound.createAsync(soundFile);
+    soundAudio = sound;
+    console.log("sound loaded");
+  } catch (e) {
+    console.log("File to load sound", e);
+  }
+}
+
+async function unloadSounds() {
+  console.log("unloading");
+  await soundAudio.unloadAsync();
+}
 
 function Home() {
   const [current, setCurrent] = useState(1);
   const [intervalId, setIntervalId] = useState(null);
   const [bpm, setBpm] = useState(60);
   const [isStarted, setIsStarted] = useState(false);
-  const soundRef = useRef(null);
 
   function handleUpdateBpm(increment) {
     setBpm((b) => b + increment);
-  }
-
-  useEffect(() => {
-    if (isStarted) {
-      clearInterval(intervalId);
-      const interval = setInterval(async () => {
-        playSound();
-        setCurrent((prev) => {
-          if (prev === 4) {
-            return 1;
-          } else {
-            return (prev += 1);
-          }
-        });
-      }, bpmToMs(bpm));
-
-      setIntervalId(interval);
-    }
-  }, [bpm]);
-
-  async function playSound() {
-    const { sound } = await Audio.Sound.createAsync(soundFile);
-    soundRef.current = sound;
-    await sound.playAsync();
+    if (isStarted) updateInterval();
   }
 
   async function handleStartPress() {
-    console.log(isStarted);
     // if started then stop
     if (isStarted) {
       console.log("Unloading Sound");
-      if (soundRef.current) soundRef.current.unloadAsync();
       clearInterval(intervalId);
+      unloadSounds();
       setIntervalId(null);
       setCurrent(1);
     } else {
@@ -64,18 +55,32 @@ function Home() {
   }
 
   async function startInterval() {
-    // soundRef.current = sound;
-    // await sound.playAsync();
-    playSound();
+    let isLoaded = false;
+    let isFirst = true;
+    prepareSounds().then(() => {
+      isLoaded = true;
+    });
     const interval = setInterval(async () => {
-      playSound();
-      setCurrent((prev) => {
-        if (prev === 4) {
-          return 1;
-        } else {
-          return (prev += 1);
-        }
-      });
+      if (!isLoaded) return;
+      // fix: use replay replace playAsync
+      soundAudio.replayAsync();
+
+      if (isFirst) {
+        isFirst = false;
+        setCurrent(1);
+      } else setCurrent((prev) => (prev === 4 ? 1 : prev + 1));
+    }, bpmToMs(bpm));
+
+    setIntervalId(interval);
+  }
+
+  function updateInterval() {
+    clearInterval(intervalId);
+    setIntervalId(null);
+
+    const interval = setInterval(async () => {
+      await soundAudio.replayAsync();
+      setCurrent((prev) => (prev === 4 ? 1 : prev + 1));
     }, bpmToMs(bpm));
 
     setIntervalId(interval);
