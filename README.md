@@ -2,7 +2,7 @@
 
 这是一个吉他节拍器，基于 `React Native` 开发
 
-![screenshot](./doc/localhost_19000_(Pixel%205).png)
+<img src="./doc/screenshot.jpg" height="400" />
 
 TODO List:
 
