@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import { styles } from "../styles/home.style";
 
-function Flag({ current }) {
+function Flag({ current }: { current: number }) {
   return (
     <View style={styles.iconsContainer}>
       {[1, 2, 3, 4].map((number) => {

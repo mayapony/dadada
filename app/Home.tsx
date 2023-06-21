@@ -3,6 +3,7 @@ import BpmChanger from "components/BpmChanger";
 import Flag from "components/Flag";
 import { DARK_THEME } from "constants/theme";
 import { Audio } from "expo-av";
+import { Sound } from "expo-av/build/Audio";
 import { Stack } from "expo-router";
 import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -10,7 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { styles } from "styles/home.style";
 import { bpmToMs } from "utils";
 
-let soundAudio;
+let soundAudio: null | Sound;
 
 async function prepareSounds() {
   try {
@@ -24,16 +25,16 @@ async function prepareSounds() {
 
 async function unloadSounds() {
   console.log("unloading");
-  await soundAudio.unloadAsync();
+  if (soundAudio) await soundAudio.unloadAsync();
 }
 
 function Home() {
   const [current, setCurrent] = useState(1);
-  const [intervalId, setIntervalId] = useState(null);
+  const [intervalId, setIntervalId] = useState<null | number>(null);
   const [bpm, setBpm] = useState(60);
   const [isStarted, setIsStarted] = useState(false);
 
-  function handleUpdateBpm(increment) {
+  function handleUpdateBpm(increment: number) {
     setBpm((b) => b + increment);
     if (isStarted) updateInterval();
   }
@@ -42,7 +43,7 @@ function Home() {
     // if started then stop
     if (isStarted) {
       console.log("Unloading Sound");
-      clearInterval(intervalId);
+      if (intervalId) clearInterval(intervalId);
       unloadSounds();
       setIntervalId(null);
       setCurrent(1);
@@ -61,7 +62,7 @@ function Home() {
       isLoaded = true;
     });
     const interval = setInterval(async () => {
-      if (!isLoaded) return;
+      if (!isLoaded || !soundAudio) return;
       // fix: use replay replace playAsync
       soundAudio.replayAsync();
 
@@ -75,10 +76,11 @@ function Home() {
   }
 
   function updateInterval() {
-    clearInterval(intervalId);
+    if (intervalId) clearInterval(intervalId);
     setIntervalId(null);
 
     const interval = setInterval(async () => {
+      if (!soundAudio) return;
       await soundAudio.replayAsync();
       setCurrent((prev) => (prev === 4 ? 1 : prev + 1));
     }, bpmToMs(bpm));
@@ -110,7 +112,7 @@ function Home() {
             onPressIn={handleStartPress}
           >
             <Text style={styles.switchButtonText}>
-              {!!isStarted ? "暂 停" : "开 始"}
+              {isStarted ? "暂 停" : "开 始"}
             </Text>
           </TouchableOpacity>
         </View>

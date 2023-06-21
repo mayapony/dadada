@@ -24,7 +24,6 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
   },
   icon: {
-    borderRadius: "50%",
     backgroundColor: DARK_THEME.overlay0,
     borderRadius:
       Math.round(
@@ -36,7 +35,6 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   activeIcon: {
-    borderRadius: "50%",
     borderRadius:
       Math.round(
         Dimensions.get("window").width + Dimensions.get("window").height

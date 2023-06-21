@@ -3,7 +3,12 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { DARK_THEME } from "../constants/theme";
 import { styles } from "../styles/bpm-changer.style";
 
-function BpmChanger({ handleUpdateBpm, bpm }) {
+type BpmChangerProps = {
+  handleUpdateBpm: (increment: number) => void;
+  bpm: number;
+};
+
+function BpmChanger({ handleUpdateBpm, bpm }: BpmChangerProps) {
   return (
     <View style={styles.container}>
       <View style={styles.buttonGroup}>
