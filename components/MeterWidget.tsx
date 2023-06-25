@@ -15,7 +15,7 @@ function MeterWidget({ handleUpdateMeter }: MeterWidgetProps) {
         showsHorizontalScrollIndicator={true}
         persistentScrollbar={true}
         contentContainerStyle={styles.container}
-        horizontal
+        horizontal={true}
       >
         {METERS.map((meter) => {
           return (

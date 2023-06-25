@@ -39,7 +39,7 @@ function Home() {
 
   function handleUpdateBpm(increment: number) {
     setBpm((b) => b + increment);
-    if (isStarted) updateInterval();
+    if (isStarted) updateInterval(meter);
   }
 
   async function handleStartPress() {
@@ -78,27 +78,36 @@ function Home() {
     setIntervalId(interval);
   }
 
-  function updateInterval() {
+  function updateInterval(curMeter: Meter) {
+    // console.log(curMeter);
     if (intervalId) clearInterval(intervalId);
     setIntervalId(null);
 
     const interval = setInterval(async () => {
       if (!soundAudio) return;
       await soundAudio.replayAsync();
-      setCurrent((prev) => (prev === meter.numerator ? 1 : prev + 1));
+      setCurrent((prev) => (prev >= curMeter.numerator ? 1 : prev + 1));
     }, bpmToMs(bpm));
 
     setIntervalId(interval);
   }
 
   function handleUpdateMeter(meter: Meter) {
+    updateInterval(meter);
     setMeter(meter);
   }
 
   return (
     <View style={styles.homeContainer}>
       <FlagWidget current={current} flagCount={meter.numerator} />
-      <View style={{ gap: 0, justifyContent: "center", alignItems: "center" }}>
+      <View
+        style={{
+          gap: 0,
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
         <MeterWidget handleUpdateMeter={handleUpdateMeter} />
 
         <TempoWidget handleUpdateBpm={handleUpdateBpm} bpm={bpm} />
