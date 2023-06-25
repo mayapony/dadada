@@ -1,15 +1,14 @@
-import soundFile from "assets/metronome.mp3";
-import BpmChanger from "components/BpmChanger";
-import Flag from "components/Flag";
-import { DARK_THEME } from "constants/theme";
+import soundFile from "assets/sounds/metronome.mp3";
+import FlagWidget from "components/FlagWidget";
+import MeterWidget from "components/MeterWidget";
+import TempoWidget from "components/TempoWidget";
 import { Audio } from "expo-av";
 import { Sound } from "expo-av/build/Audio";
-import { Stack } from "expo-router";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { styles } from "styles/home.style";
-import { bpmToMs } from "utils";
+import { Meter } from "types/meter.interface";
+import { bpmToMs } from "utils/index";
 
 let soundAudio: null | Sound;
 
@@ -33,6 +32,10 @@ function Home() {
   const [intervalId, setIntervalId] = useState<null | number>(null);
   const [bpm, setBpm] = useState(60);
   const [isStarted, setIsStarted] = useState(false);
+  const [meter, setMeter] = useState<Meter>({
+    numerator: 4,
+    denominator: 4,
+  });
 
   function handleUpdateBpm(increment: number) {
     setBpm((b) => b + increment);
@@ -69,7 +72,7 @@ function Home() {
       if (isFirst) {
         isFirst = false;
         setCurrent(1);
-      } else setCurrent((prev) => (prev === 4 ? 1 : prev + 1));
+      } else setCurrent((prev) => (prev === meter.numerator ? 1 : prev + 1));
     }, bpmToMs(bpm));
 
     setIntervalId(interval);
@@ -82,42 +85,34 @@ function Home() {
     const interval = setInterval(async () => {
       if (!soundAudio) return;
       await soundAudio.replayAsync();
-      setCurrent((prev) => (prev === 4 ? 1 : prev + 1));
+      setCurrent((prev) => (prev === meter.numerator ? 1 : prev + 1));
     }, bpmToMs(bpm));
 
     setIntervalId(interval);
   }
 
+  function handleUpdateMeter(meter: Meter) {
+    setMeter(meter);
+  }
+
   return (
-    <SafeAreaView style={styles.homeArea}>
-      <Stack.Screen
-        options={{
-          headerTitle: "DADADA 🌸",
-          headerShadowVisible: false,
-          headerTitleAlign: "center",
-          headerTintColor: DARK_THEME.text,
-          headerStyle: {
-            backgroundColor: DARK_THEME.base,
-          },
-        }}
-      />
-      <View style={styles.homeContainer}>
-        <Flag current={current} />
-        <View
-          style={{ gap: 30, justifyContent: "center", alignItems: "center" }}
+    <View style={styles.homeContainer}>
+      <FlagWidget current={current} flagCount={meter.numerator} />
+      <View style={{ gap: 0, justifyContent: "center", alignItems: "center" }}>
+        <MeterWidget handleUpdateMeter={handleUpdateMeter} />
+
+        <TempoWidget handleUpdateBpm={handleUpdateBpm} bpm={bpm} />
+
+        <TouchableOpacity
+          style={styles.switchButton}
+          onPressIn={handleStartPress}
         >
-          <BpmChanger handleUpdateBpm={handleUpdateBpm} bpm={bpm} />
-          <TouchableOpacity
-            style={styles.switchButton}
-            onPressIn={handleStartPress}
-          >
-            <Text style={styles.switchButtonText}>
-              {isStarted ? "暂 停" : "开 始"}
-            </Text>
-          </TouchableOpacity>
-        </View>
+          <Text style={styles.switchButtonText}>
+            {isStarted ? "暂 停" : "开 始"}
+          </Text>
+        </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 

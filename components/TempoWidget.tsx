@@ -1,14 +1,14 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { DARK_THEME } from "../constants/theme";
-import { styles } from "../styles/bpm-changer.style";
+import { styles } from "styles/tempo-widget.style";
 
 type BpmChangerProps = {
   handleUpdateBpm: (increment: number) => void;
   bpm: number;
 };
 
-function BpmChanger({ handleUpdateBpm, bpm }: BpmChangerProps) {
+function TempoWidget({ handleUpdateBpm, bpm }: BpmChangerProps) {
   return (
     <View style={styles.container}>
       <View style={styles.buttonGroup}>
@@ -35,7 +35,13 @@ function BpmChanger({ handleUpdateBpm, bpm }: BpmChangerProps) {
   );
 }
 
-function ChangeBpmButton({ number, handleUpdateBpm }) {
+function ChangeBpmButton({
+  number,
+  handleUpdateBpm,
+}: {
+  number: number;
+  handleUpdateBpm: BpmChangerProps["handleUpdateBpm"];
+}) {
   return (
     <TouchableOpacity
       style={styles.changeBtmButton}
@@ -50,4 +56,4 @@ function ChangeBpmButton({ number, handleUpdateBpm }) {
   );
 }
 
-export default BpmChanger;
+export default TempoWidget;

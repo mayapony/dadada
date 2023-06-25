@@ -11,6 +11,7 @@
         "projectId": "420dd410-35e5-4d07-938b-a4a593dcd013"
       }
     },
+    "icon": "./assets/icons/icon.png",
     "name": "dadada",
     "scheme": "acme",
     "slug": "dadada",

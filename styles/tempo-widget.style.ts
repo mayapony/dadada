@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
     width: "90%",
     margin: "auto",
     gap: 15,
+    marginBottom: 30,
   },
   buttonGroup: {
     flexDirection: "column",
