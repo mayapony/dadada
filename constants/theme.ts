@@ -7,4 +7,6 @@ export const DARK_THEME = {
   surface2: "#585b70",
   pink: "#f5c2e7",
   blue: "#89b4fa",
+  mauve: "#cba6f7",
+  maroon: "#eba0ac",
 };

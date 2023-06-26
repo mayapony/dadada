@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import { DARK_THEME } from "../constants/theme";
 
 export const styles = StyleSheet.create({
@@ -11,13 +11,14 @@ export const styles = StyleSheet.create({
   },
   buttonGroup: {
     flexDirection: "column",
-    flexGrow: 1,
+    // flexGrow: 1,
+    width: (Dimensions.get("window").width * 0.9 - 50) * 0.25,
     height: "100%",
     gap: 10,
   },
   centerContainer: {
     height: 120,
-    flexGrow: 2,
+    flexGrow: 1,
     backgroundColor: DARK_THEME.surface0,
     display: "flex",
     justifyContent: "center",

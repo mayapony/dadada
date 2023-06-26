@@ -1,14 +1,15 @@
 import { METERS } from "constants/meters";
 import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { styles } from "styles/meter-widget.style";
+import { statedStyle, styles } from "styles/meter-widget.style";
 import { Meter } from "types/meter.interface";
 
 type MeterWidgetProps = {
   handleUpdateMeter: (meter: Meter) => void;
+  meter: Meter;
 };
 
-function MeterWidget({ handleUpdateMeter }: MeterWidgetProps) {
+function MeterWidget({ handleUpdateMeter, meter }: MeterWidgetProps) {
   return (
     <View style={styles.outerContainer}>
       <ScrollView
@@ -17,18 +18,23 @@ function MeterWidget({ handleUpdateMeter }: MeterWidgetProps) {
         contentContainerStyle={styles.container}
         horizontal={true}
       >
-        {METERS.map((meter) => {
+        {METERS.map((m) => {
           return (
             <TouchableOpacity
-              key={meter.numerator + meter.numerator}
-              style={styles.itemContainer}
+              key={m.numerator + m.numerator}
+              style={
+                statedStyle(
+                  meter.numerator === m.numerator &&
+                    meter.denominator === m.denominator
+                ).itemContainer
+              }
               onPress={() => {
-                handleUpdateMeter(meter);
+                handleUpdateMeter(m);
               }}
             >
               <Text
                 style={styles.itemText}
-              >{`${meter.numerator}/${meter.denominator}`}</Text>
+              >{`${m.numerator}/${m.denominator}`}</Text>
             </TouchableOpacity>
           );
         })}

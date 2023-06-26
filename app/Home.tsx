@@ -1,6 +1,7 @@
 import soundFile from "assets/sounds/metronome.mp3";
 import FlagWidget from "components/FlagWidget";
 import MeterWidget from "components/MeterWidget";
+import PatternWidget from "components/PatternWidget";
 import TempoWidget from "components/TempoWidget";
 import { Audio } from "expo-av";
 import { Sound } from "expo-av/build/Audio";
@@ -108,7 +109,9 @@ function Home() {
           flexDirection: "column",
         }}
       >
-        <MeterWidget handleUpdateMeter={handleUpdateMeter} />
+        <MeterWidget handleUpdateMeter={handleUpdateMeter} meter={meter} />
+
+        <PatternWidget />
 
         <TempoWidget handleUpdateBpm={handleUpdateBpm} bpm={bpm} />
 
