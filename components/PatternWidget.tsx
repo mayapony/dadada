@@ -1,27 +1,31 @@
+import { PATTERNS } from "constants/patterns";
 import React from "react";
 import { Image, TouchableOpacity, View } from "react-native";
-import { styles } from "styles/pattern-widget.style";
+import { statedStyle, styles } from "styles/pattern-widget.style";
+import { PatternIcon } from "types/pattern-icon.interface";
 
-const iconAsserts = [
-  require("../assets/icons/note1.png"),
-  require("../assets/icons/note2.png"),
-  require("../assets/icons/note3.png"),
-  require("../assets/icons/note4.png"),
-];
+type PatternWidgetProps = {
+  handleUpdatePattern: (pattern: PatternIcon) => void;
+  pattern: PatternIcon;
+};
 
-function PatternWidget() {
+function PatternWidget({ pattern, handleUpdatePattern }: PatternWidgetProps) {
   return (
     <View style={styles.container}>
-      {iconAsserts.map((icon, index) => {
+      {PATTERNS.map((p, index) => {
         return (
           <TouchableOpacity
             key={index}
-            style={styles.itemContainer}
+            style={statedStyle(pattern.value === p.value).iconContainer}
             onPress={() => {
-              return index;
+              handleUpdatePattern(p);
             }}
           >
-            <Image source={icon} style={styles.icon} resizeMethod="resize" />
+            <Image
+              source={p.iconSource}
+              style={styles.icon}
+              resizeMethod="resize"
+            />
           </TouchableOpacity>
         );
       })}

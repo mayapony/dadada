@@ -2,7 +2,8 @@ import FlagWidget from "components/FlagWidget";
 import MeterWidget from "components/MeterWidget";
 import PatternWidget from "components/PatternWidget";
 import TempoWidget from "components/TempoWidget";
-import React, { useState } from "react";
+import { PATTERNS } from "constants/patterns";
+import React, { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "styles/home.style";
 import { Meter } from "types/meter.interface";
@@ -12,17 +13,18 @@ import { prepareSounds, soundAudio, unloadSounds } from "utils/sound-manager";
 function Home() {
   const [current, setCurrent] = useState(1);
   const [intervalId, setIntervalId] = useState<null | number>(null);
-  const [bpm, setBpm] = useState(60);
+  const [tempo, setTempo] = useState(60);
   const [isStarted, setIsStarted] = useState(false);
   const [meter, setMeter] = useState<Meter>({
     numerator: 4,
     denominator: 4,
   });
+  const [pattern, setPattern] = useState(PATTERNS[0]);
 
-  function handleUpdateBpm(increment: number) {
-    setBpm((b) => b + increment);
-    if (isStarted) manageInterval(meter);
-  }
+  useEffect(() => {
+    if (current > meter.numerator) setCurrent(1);
+    if (isStarted) updateInterval();
+  }, [meter, pattern, tempo]);
 
   async function handleStartPress() {
     // if started then stop
@@ -34,40 +36,34 @@ function Home() {
       setCurrent(1);
     } else {
       // else then start
-      manageInterval(meter, true);
+      await prepareSounds();
+      updateInterval();
     }
 
     setIsStarted((is) => !is);
   }
 
-  function manageInterval(curMeter: Meter, isInitInterval = false) {
-    let isLoaded = false;
+  function updateInterval() {
     let isFirst = true;
-    if (isInitInterval) {
-      prepareSounds().then(() => {
-        isLoaded = true;
-      });
-    } else isLoaded = true;
 
-    if (intervalId) clearInterval(intervalId);
-    setIntervalId(null);
+    if (intervalId) {
+      clearInterval(intervalId);
+      setIntervalId(null);
+    }
 
     const interval = setInterval(async () => {
-      if (!isLoaded || !soundAudio) return;
+      if (!soundAudio) return;
       await soundAudio.replayAsync();
 
-      if (isInitInterval && isFirst) {
+      if (isFirst) {
         isFirst = false;
-        setCurrent(1);
-      } else setCurrent((prev) => (prev >= curMeter.numerator ? 1 : prev + 1));
-    }, bpmToMs(bpm));
+        setCurrent(current > meter.numerator ? 1 : current);
+      } else {
+        setCurrent((prev) => (prev >= meter.numerator ? 1 : prev + 1));
+      }
+    }, bpmToMs(tempo) / pattern.value);
 
     setIntervalId(interval);
-  }
-  function handleUpdateMeter(meter: Meter) {
-    setMeter(meter);
-
-    if (isStarted) manageInterval(meter);
   }
 
   return (
@@ -81,11 +77,11 @@ function Home() {
           flexDirection: "column",
         }}
       >
-        <MeterWidget handleUpdateMeter={handleUpdateMeter} meter={meter} />
+        <MeterWidget handleUpdateMeter={setMeter} meter={meter} />
 
-        <PatternWidget />
+        <PatternWidget pattern={pattern} handleUpdatePattern={setPattern} />
 
-        <TempoWidget handleUpdateBpm={handleUpdateBpm} bpm={bpm} />
+        <TempoWidget tempo={tempo} setTempo={setTempo} />
 
         <TouchableOpacity
           style={styles.switchButton}

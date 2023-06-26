@@ -1,25 +1,25 @@
-import React from "react";
+import React, { SetStateAction } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { DARK_THEME } from "../constants/theme";
 import { styles } from "styles/tempo-widget.style";
+import { DARK_THEME } from "../constants/theme";
 
-type BpmChangerProps = {
-  handleUpdateBpm: (increment: number) => void;
-  bpm: number;
+type TempoWidgetProps = {
+  setTempo: (func: SetStateAction<number>) => void;
+  tempo: number;
 };
 
-function TempoWidget({ handleUpdateBpm, bpm }: BpmChangerProps) {
+function TempoWidget({ setTempo, tempo }: TempoWidgetProps) {
   return (
     <View style={styles.container}>
       <View style={styles.buttonGroup}>
-        <ChangeBpmButton number={-1} handleUpdateBpm={handleUpdateBpm} />
-        <ChangeBpmButton number={-5} handleUpdateBpm={handleUpdateBpm} />
+        <ChangeTempoButton number={-1} setTempo={setTempo} />
+        <ChangeTempoButton number={-5} setTempo={setTempo} />
       </View>
       <View style={styles.centerContainer}>
         <Text
           style={{ fontSize: 30, fontWeight: "bold", color: DARK_THEME.pink }}
         >
-          {bpm}
+          {tempo}
         </Text>
         <Text
           style={{ fontSize: 15, fontWeight: "400", color: DARK_THEME.text }}
@@ -28,25 +28,25 @@ function TempoWidget({ handleUpdateBpm, bpm }: BpmChangerProps) {
         </Text>
       </View>
       <View style={styles.buttonGroup}>
-        <ChangeBpmButton number={1} handleUpdateBpm={handleUpdateBpm} />
-        <ChangeBpmButton number={5} handleUpdateBpm={handleUpdateBpm} />
+        <ChangeTempoButton number={1} setTempo={setTempo} />
+        <ChangeTempoButton number={5} setTempo={setTempo} />
       </View>
     </View>
   );
 }
 
-function ChangeBpmButton({
+function ChangeTempoButton({
   number,
-  handleUpdateBpm,
+  setTempo,
 }: {
   number: number;
-  handleUpdateBpm: BpmChangerProps["handleUpdateBpm"];
+  setTempo: TempoWidgetProps["setTempo"];
 }) {
   return (
     <TouchableOpacity
       style={styles.changeBtmButton}
       onPress={() => {
-        handleUpdateBpm(number);
+        setTempo((t) => t + number);
       }}
     >
       <Text style={{ fontSize: 20, color: DARK_THEME.text }}>{`${
