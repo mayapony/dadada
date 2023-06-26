@@ -1,32 +1,13 @@
-import soundFile from "assets/sounds/metronome.mp3";
 import FlagWidget from "components/FlagWidget";
 import MeterWidget from "components/MeterWidget";
 import PatternWidget from "components/PatternWidget";
 import TempoWidget from "components/TempoWidget";
-import { Audio } from "expo-av";
-import { Sound } from "expo-av/build/Audio";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "styles/home.style";
 import { Meter } from "types/meter.interface";
 import { bpmToMs } from "utils/index";
-
-let soundAudio: null | Sound;
-
-async function prepareSounds() {
-  try {
-    const { sound } = await Audio.Sound.createAsync(soundFile);
-    soundAudio = sound;
-    console.log("sound loaded");
-  } catch (e) {
-    console.log("File to load sound", e);
-  }
-}
-
-async function unloadSounds() {
-  console.log("unloading");
-  if (soundAudio) await soundAudio.unloadAsync();
-}
+import { prepareSounds, soundAudio, unloadSounds } from "utils/sound-manager";
 
 function Home() {
   const [current, setCurrent] = useState(1);
@@ -40,7 +21,7 @@ function Home() {
 
   function handleUpdateBpm(increment: number) {
     setBpm((b) => b + increment);
-    if (isStarted) updateInterval(meter);
+    if (isStarted) manageInterval(meter);
   }
 
   async function handleStartPress() {
@@ -53,49 +34,40 @@ function Home() {
       setCurrent(1);
     } else {
       // else then start
-      startInterval();
+      manageInterval(meter, true);
     }
 
     setIsStarted((is) => !is);
   }
 
-  async function startInterval() {
+  function manageInterval(curMeter: Meter, isInitInterval = false) {
     let isLoaded = false;
     let isFirst = true;
-    prepareSounds().then(() => {
-      isLoaded = true;
-    });
-    const interval = setInterval(async () => {
-      if (!isLoaded || !soundAudio) return;
-      // fix: use replay replace playAsync
-      soundAudio.replayAsync();
+    if (isInitInterval) {
+      prepareSounds().then(() => {
+        isLoaded = true;
+      });
+    } else isLoaded = true;
 
-      if (isFirst) {
-        isFirst = false;
-        setCurrent(1);
-      } else setCurrent((prev) => (prev === meter.numerator ? 1 : prev + 1));
-    }, bpmToMs(bpm));
-
-    setIntervalId(interval);
-  }
-
-  function updateInterval(curMeter: Meter) {
-    // console.log(curMeter);
     if (intervalId) clearInterval(intervalId);
     setIntervalId(null);
 
     const interval = setInterval(async () => {
-      if (!soundAudio) return;
+      if (!isLoaded || !soundAudio) return;
       await soundAudio.replayAsync();
-      setCurrent((prev) => (prev >= curMeter.numerator ? 1 : prev + 1));
+
+      if (isInitInterval && isFirst) {
+        isFirst = false;
+        setCurrent(1);
+      } else setCurrent((prev) => (prev >= curMeter.numerator ? 1 : prev + 1));
     }, bpmToMs(bpm));
 
     setIntervalId(interval);
   }
-
   function handleUpdateMeter(meter: Meter) {
-    updateInterval(meter);
     setMeter(meter);
+
+    if (isStarted) manageInterval(meter);
   }
 
   return (
