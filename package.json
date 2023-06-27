@@ -1,13 +1,18 @@
 {
-  "author": {"email": "mayapony@foxmail.com", "name": "maya"},
+  "author": {
+    "email": "mayapony@foxmail.com",
+    "name": "maya"
+  },
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "build:apk": "eas build -p android --profile preview"
+    "build:apk": "npx eas build -p android --profile preview",
+    "build:web": "npx eas build -p web"
   },
   "dependencies": {
+    "@expo/webpack-config": "^18.0.1",
     "@types/react": "~18.0.27",
     "expo": "^48.0.7",
     "expo-av": "^13.2.1",

@@ -6,9 +6,6 @@
     "androidNavigationBar": {
       "backgroundColor": "#1e1e2e"
     },
-    "assembleRelease": [
-      "assets/*"
-    ],
     "description": "A metronome APP for simple use",
     "extra": {
       "eas": {
@@ -20,6 +17,7 @@
     "name": "dadada",
     "orientation": "portrait",
     "owner": "mayapony",
+    "scheme": "acme",
     "slug": "dadada",
     "version": "1.0.1",
     "web": {
