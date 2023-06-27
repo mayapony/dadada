@@ -2,6 +2,7 @@ import FlagWidget from "components/FlagWidget";
 import MeterWidget from "components/MeterWidget";
 import PatternWidget from "components/PatternWidget";
 import TempoWidget from "components/TempoWidget";
+import { METERS } from "constants/meters";
 import { PATTERNS } from "constants/patterns";
 import React, { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -15,10 +16,7 @@ function Home() {
   const [intervalId, setIntervalId] = useState<null | number>(null);
   const [tempo, setTempo] = useState(60);
   const [isStarted, setIsStarted] = useState(false);
-  const [meter, setMeter] = useState<Meter>({
-    numerator: 4,
-    denominator: 4,
-  });
+  const [meter, setMeter] = useState<Meter>(METERS[3]);
   const [pattern, setPattern] = useState(PATTERNS[0]);
 
   useEffect(() => {
@@ -45,6 +43,7 @@ function Home() {
 
   function updateInterval() {
     let isFirst = true;
+    let remainCount = pattern.value;
 
     if (intervalId) {
       clearInterval(intervalId);
@@ -53,14 +52,18 @@ function Home() {
 
     const interval = setInterval(async () => {
       if (!soundAudio) return;
-      await soundAudio.replayAsync();
+      await soundAudio.replayAsync({
+        volume: remainCount <= 0 ? 1 : 0.4,
+      });
 
       if (isFirst) {
         isFirst = false;
         setCurrent(current > meter.numerator ? 1 : current);
-      } else {
+      } else if (remainCount <= 0) {
+        remainCount = pattern.value;
         setCurrent((prev) => (prev >= meter.numerator ? 1 : prev + 1));
       }
+      remainCount--;
     }, bpmToMs(tempo) / pattern.value);
 
     setIntervalId(interval);
