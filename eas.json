@@ -9,10 +9,18 @@
         "buildType": "apk"
       }
     },
+    "preview2": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "preview3": {
+      "developmentClient": true
+    },
     "production": {}
   },
   "cli": {
-    "version": ">= 3.13.3"
+    "version": ">= 3.14.0"
   },
   "submit": {
     "production": {}

@@ -3,18 +3,25 @@
     "android": {
       "package": "com.maya.dadada"
     },
+    "androidNavigationBar": {
+      "backgroundColor": "#1e1e2e"
+    },
     "assembleRelease": [
       "assets/*"
     ],
+    "description": "A metronome APP for simple use",
     "extra": {
       "eas": {
         "projectId": "420dd410-35e5-4d07-938b-a4a593dcd013"
       }
     },
+    "githubUrl": "https://github.com/mayapony/dadada",
     "icon": "./assets/icons/icon.png",
     "name": "dadada",
-    "scheme": "acme",
+    "orientation": "portrait",
+    "owner": "mayapony",
     "slug": "dadada",
+    "version": "1.0.1",
     "web": {
       "bundler": "metro"
     }

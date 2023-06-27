@@ -1,9 +1,11 @@
 {
+  "author": {"email": "mayapony@foxmail.com", "name": "maya"},
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "build:apk": "eas build -p android --profile preview"
   },
   "dependencies": {
     "@types/react": "~18.0.27",
@@ -11,6 +13,7 @@
     "expo-av": "^13.2.1",
     "expo-constants": "~14.2.1",
     "expo-linking": "~4.0.1",
+    "expo-navigation-bar": "~2.1.1",
     "expo-router": "^1.5.3",
     "expo-splash-screen": "~0.18.1",
     "expo-status-bar": "~1.4.4",
@@ -21,12 +24,12 @@
     "react-native-reanimated": "~2.14.4",
     "react-native-safe-area-context": "4.5.0",
     "react-native-screens": "~3.20.0",
-    "react-native-web": "~0.18.7",
-    "expo-navigation-bar": "~2.1.1"
+    "react-native-web": "~0.18.7"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
+    "@types/node": "^20.3.2",
     "@typescript-eslint/eslint-plugin": "^5.60.0",
     "@typescript-eslint/parser": "^5.60.0",
     "babel-plugin-module-resolver": "^5.0.0",
@@ -44,6 +47,6 @@
     "metro-resolver": "^0.73.7"
   },
   "name": "dadada",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true
 }
