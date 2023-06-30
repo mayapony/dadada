@@ -9,7 +9,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "styles/home.style";
 import { Meter } from "types/meter.interface";
 import { bpmToMs } from "utils/index";
-import { prepareSounds, soundAudio, unloadSounds } from "utils/sound-manager";
+import { prepareSounds, soundAudios, unloadSounds } from "utils/sound-manager";
 
 function Home() {
   const [current, setCurrent] = useState(1);
@@ -42,7 +42,7 @@ function Home() {
   }
 
   function updateInterval() {
-    let isFirst = true;
+    let isUpdated = true;
     let remainCount = pattern.value;
 
     if (intervalId) {
@@ -51,17 +51,25 @@ function Home() {
     }
 
     const interval = setInterval(async () => {
-      if (!soundAudio) return;
-      await soundAudio.replayAsync({
-        volume: remainCount <= 0 ? 1 : 0.4,
-      });
-
-      if (isFirst) {
-        isFirst = false;
+      if (isUpdated) {
+        isUpdated = false;
+        // current > meter.numerator || current === 1
+        //   ? soundAudios.high?.replayAsync()
+        //   : soundAudios.mid?.replayAsync();
+        soundAudios.mid?.replayAsync();
         setCurrent(current > meter.numerator ? 1 : current);
       } else if (remainCount <= 0) {
         remainCount = pattern.value;
-        setCurrent((prev) => (prev >= meter.numerator ? 1 : prev + 1));
+        setCurrent((prev) => {
+          // const next = prev + 1 > meter.numerator ? 1 : prev + 1;
+          // next === 1
+          //   ? soundAudios.high?.replayAsync()
+          //   : soundAudios.mid?.replayAsync();
+          soundAudios.mid?.replayAsync();
+          return prev >= meter.numerator ? 1 : prev + 1;
+        });
+      } else {
+        soundAudios.low?.replayAsync();
       }
       remainCount--;
     }, bpmToMs(tempo) / pattern.value);
