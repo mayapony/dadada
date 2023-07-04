@@ -1,3 +1,4 @@
+import FileWidget from "components/FileWidget";
 import FlagWidget from "components/FlagWidget";
 import MeterWidget from "components/MeterWidget";
 import PatternWidget from "components/PatternWidget";
@@ -80,20 +81,19 @@ function Home() {
   return (
     <View style={styles.homeContainer}>
       <FlagWidget current={current} flagCount={meter.numerator} />
+
       <View
         style={{
-          gap: 0,
+          gap: 25,
           justifyContent: "center",
           alignItems: "center",
           flexDirection: "column",
         }}
       >
+        <FileWidget />
         <MeterWidget handleUpdateMeter={setMeter} meter={meter} />
-
         <PatternWidget pattern={pattern} handleUpdatePattern={setPattern} />
-
         <TempoWidget tempo={tempo} setTempo={setTempo} />
-
         <TouchableOpacity
           style={styles.switchButton}
           onPressIn={handleStartPress}

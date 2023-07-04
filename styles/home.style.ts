@@ -29,8 +29,6 @@ export const styles = StyleSheet.create({
   },
   homeContainer: {
     flexDirection: "column",
-    paddingLeft: 10,
-    paddingRight: 10,
     height: "100%",
     justifyContent: "space-between",
   },
@@ -42,6 +40,9 @@ export const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 20,
     borderRadius: 10,
+    width: "90%",
+    marginHorizontal: "auto",
+    marginTop: 10,
   },
   switchButton: {
     width: "90%",

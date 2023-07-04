@@ -52,6 +52,5 @@
     "metro-resolver": "^0.73.7"
   },
   "name": "dadada",
-  "version": "1.0.1",
   "private": true
 }

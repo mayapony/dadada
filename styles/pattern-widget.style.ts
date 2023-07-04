@@ -1,10 +1,13 @@
 import { DARK_THEME } from "constants/theme";
 import { Dimensions, StyleSheet, ViewStyle } from "react-native";
 
+const singleGap = 10;
+const containerGap = singleGap * 3;
+
 export const statedStyle = (active: boolean) => {
   let iconContainer: ViewStyle = {
     backgroundColor: DARK_THEME.surface0,
-    width: (Dimensions.get("window").width * 0.9 - 50) * 0.25,
+    width: (Dimensions.get("window").width * 0.9 - containerGap) * 0.25,
     height: 50,
     borderRadius: 10,
     justifyContent: "center",
@@ -25,8 +28,7 @@ export const statedStyle = (active: boolean) => {
 
 export const styles = StyleSheet.create({
   container: {
-    width: Dimensions.get("window").width * 0.85,
-    height: 80,
+    width: "90%",
     justifyContent: "space-between",
     flexDirection: "row",
   },

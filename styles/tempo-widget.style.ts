@@ -1,20 +1,21 @@
 import { Dimensions, StyleSheet } from "react-native";
 import { DARK_THEME } from "../constants/theme";
 
+const singleGap = 10;
+const containerGap = singleGap * 2;
+
 export const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     width: "90%",
     margin: "auto",
-    gap: 15,
-    marginBottom: 30,
+    gap: 10,
   },
   buttonGroup: {
     flexDirection: "column",
-    // flexGrow: 1,
-    width: (Dimensions.get("window").width * 0.9 - 50) * 0.25,
+    width: (Dimensions.get("window").width * 0.9 - containerGap) * 0.25,
     height: "100%",
-    gap: 10,
+    gap: 15,
   },
   centerContainer: {
     height: 120,

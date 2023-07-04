@@ -19,7 +19,7 @@
     "owner": "mayapony",
     "scheme": "acme",
     "slug": "dadada",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "web": {
       "bundler": "metro"
     }
