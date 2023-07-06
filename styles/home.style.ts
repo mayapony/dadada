@@ -31,6 +31,7 @@ export const styles = StyleSheet.create({
     flexDirection: "column",
     height: "100%",
     justifyContent: "space-between",
+    alignItems: "center",
   },
   iconsContainer: {
     backgroundColor: DARK_THEME.surface0,
@@ -40,12 +41,12 @@ export const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 20,
     borderRadius: 10,
-    width: "90%",
+    width: "95%",
     marginHorizontal: "auto",
     marginTop: 10,
   },
   switchButton: {
-    width: "90%",
+    width: Dimensions.get("window").width * 0.9,
     paddingTop: 20,
     paddingBottom: 20,
     alignSelf: "center",

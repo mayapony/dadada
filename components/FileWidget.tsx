@@ -1,7 +1,7 @@
 import { Entypo } from "@expo/vector-icons";
 import { DARK_THEME } from "constants/theme";
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View, Text } from "react-native";
 import { styles } from "styles/file-widget.style";
 
 function FileWidget() {
@@ -11,7 +11,10 @@ function FileWidget() {
         <Entypo name="chevron-left" size={25} color={DARK_THEME.text} />
       </TouchableOpacity>
       <View style={styles.centerContainer}>
-        <Text style={styles.fileName}>未命名</Text>
+        <View style={styles.textContainer}>
+          <Text style={styles.fileName}>未命名</Text>
+          <Text style={styles.time}>15:30</Text>
+        </View>
         <View style={styles.centerBottomContainer}>
           <Entypo name="trash" size={20} color={DARK_THEME.maroon} />
           <Entypo name="list" size={20} color={DARK_THEME.text} />

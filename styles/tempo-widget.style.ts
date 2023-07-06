@@ -1,7 +1,7 @@
 import { Dimensions, StyleSheet } from "react-native";
 import { DARK_THEME } from "../constants/theme";
 
-const singleGap = 10;
+const singleGap = 15;
 const containerGap = singleGap * 2;
 
 export const styles = StyleSheet.create({
@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     width: "90%",
     margin: "auto",
-    gap: 10,
+    gap: singleGap,
   },
   buttonGroup: {
     flexDirection: "column",

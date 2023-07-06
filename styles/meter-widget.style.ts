@@ -1,7 +1,7 @@
 import { DARK_THEME } from "constants/theme";
 import { Dimensions, StyleSheet, ViewStyle } from "react-native";
 
-const singleGap = 10;
+const singleGap = 15;
 const containerGap = singleGap * 3;
 
 export const statedStyle = (active: boolean) => {

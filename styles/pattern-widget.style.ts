@@ -1,7 +1,7 @@
 import { DARK_THEME } from "constants/theme";
 import { Dimensions, StyleSheet, ViewStyle } from "react-native";
 
-const singleGap = 10;
+const singleGap = 15;
 const containerGap = singleGap * 3;
 
 export const statedStyle = (active: boolean) => {
@@ -28,7 +28,7 @@ export const statedStyle = (active: boolean) => {
 
 export const styles = StyleSheet.create({
   container: {
-    width: "90%",
+    width: Dimensions.get("window").width * 0.9,
     justifyContent: "space-between",
     flexDirection: "row",
   },

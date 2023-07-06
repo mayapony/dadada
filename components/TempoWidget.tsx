@@ -49,7 +49,7 @@ function ChangeTempoButton({
         setTempo((t) => t + number);
       }}
     >
-      <Text style={{ fontSize: 20, color: DARK_THEME.text }}>{`${
+      <Text style={{ fontSize: 18, color: DARK_THEME.text }}>{`${
         number > 0 ? "+" : ""
       }${number}`}</Text>
     </TouchableOpacity>

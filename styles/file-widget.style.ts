@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   outerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    height: 100,
+    height: 150,
     backgroundColor: DARK_THEME.surface0,
     width: Dimensions.get("window").width * 0.9,
     borderRadius: 15,
@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   centerContainer: {
+    width: Dimensions.get("window").width * 0.9 * (1 - 0.36),
     flexGrow: 1,
     flexDirection: "column",
     justifyContent: "space-around",
@@ -24,15 +25,27 @@ export const styles = StyleSheet.create({
   },
   centerBottomContainer: {
     flexDirection: "row",
-    width: "100%",
     justifyContent: "space-around",
+    width: "100%",
+  },
+  textContainer: {
+    borderRadius: 10,
+    paddingVertical: 10,
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center",
+    gap: 5,
   },
   fileName: {
     color: DARK_THEME.pink,
-    textAlign: "center",
-    textAlignVertical: "center",
     fontSize: 20,
     fontWeight: "bold",
-    padding: 5,
+  },
+  time: {
+    color: "white",
+    fontSize: 15,
+  },
+  btnIconContainer: {
+    backgroundColor: "blue",
   },
 });
