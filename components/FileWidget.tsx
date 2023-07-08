@@ -1,7 +1,7 @@
 import { Entypo } from "@expo/vector-icons";
 import { DARK_THEME } from "constants/theme";
 import React from "react";
-import { TouchableOpacity, View, Text } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "styles/file-widget.style";
 
 function FileWidget() {

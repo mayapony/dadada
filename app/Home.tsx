@@ -1,5 +1,5 @@
+import BeatWidget from "components/BeatWidget";
 import FileWidget from "components/FileWidget";
-import FlagWidget from "components/FlagWidget";
 import MeterWidget from "components/MeterWidget";
 import PatternWidget from "components/PatternWidget";
 import TempoWidget from "components/TempoWidget";
@@ -8,21 +8,35 @@ import { PATTERNS } from "constants/patterns";
 import React, { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "styles/home.style";
+import { BeatState } from "types/beat.interface";
 import { Meter } from "types/meter.interface";
 import { bpmToMs } from "utils/index";
-import { prepareSounds, soundAudios, unloadSounds } from "utils/sound-manager";
+import {
+  prepareSounds,
+  setSoundsRate,
+  unloadSounds,
+} from "utils/sound-manager";
+
+const initBeatState: BeatState = {
+  currentBeat: 1,
+  currentSlice: 1,
+};
 
 function Home() {
-  const [current, setCurrent] = useState(1);
-  const [intervalId, setIntervalId] = useState<null | number>(null);
+  const [beatState, setBeatState] = useState<BeatState>(initBeatState);
+  const [intervalId, setIntervalId] = useState<number | null>(null);
   const [tempo, setTempo] = useState(60);
   const [isStarted, setIsStarted] = useState(false);
   const [meter, setMeter] = useState<Meter>(METERS[3]);
   const [pattern, setPattern] = useState(PATTERNS[0]);
 
   useEffect(() => {
-    if (current > meter.numerator) setCurrent(1);
-    if (isStarted) updateInterval();
+    setBeatState(initBeatState);
+    if (isStarted) {
+      const rate = pattern.value * (tempo >= 60 ? 1 : tempo / 60);
+      setSoundsRate(rate);
+      updateInterval();
+    }
   }, [meter, pattern, tempo]);
 
   async function handleStartPress() {
@@ -32,47 +46,36 @@ function Home() {
       if (intervalId) clearInterval(intervalId);
       unloadSounds();
       setIntervalId(null);
-      setCurrent(1);
+      setIsStarted((is) => !is);
+      setBeatState(initBeatState);
     } else {
       // else then start
       await prepareSounds();
+      setIsStarted((is) => !is);
       updateInterval();
     }
-
-    setIsStarted((is) => !is);
   }
 
   function updateInterval() {
-    let isUpdated = true;
-    let remainCount = pattern.value;
-
     if (intervalId) {
       clearInterval(intervalId);
       setIntervalId(null);
     }
 
-    const interval = setInterval(async () => {
-      if (isUpdated) {
-        isUpdated = false;
-        // current > meter.numerator || current === 1
-        //   ? soundAudios.high?.replayAsync()
-        //   : soundAudios.mid?.replayAsync();
-        soundAudios.mid?.replayAsync();
-        setCurrent(current > meter.numerator ? 1 : current);
-      } else if (remainCount <= 0) {
-        remainCount = pattern.value;
-        setCurrent((prev) => {
-          // const next = prev + 1 > meter.numerator ? 1 : prev + 1;
-          // next === 1
-          //   ? soundAudios.high?.replayAsync()
-          //   : soundAudios.mid?.replayAsync();
-          soundAudios.mid?.replayAsync();
-          return prev >= meter.numerator ? 1 : prev + 1;
-        });
-      } else {
-        soundAudios.low?.replayAsync();
-      }
-      remainCount--;
+    const interval = setInterval(() => {
+      setBeatState((bs) => {
+        if (bs.currentSlice >= pattern.value) {
+          return {
+            currentBeat:
+              bs.currentBeat + 1 > meter.numerator ? 1 : bs.currentBeat + 1,
+            currentSlice: 1,
+          };
+        }
+        return {
+          ...bs,
+          currentSlice: bs.currentSlice + 1,
+        };
+      });
     }, bpmToMs(tempo) / pattern.value);
 
     setIntervalId(interval);
@@ -80,7 +83,11 @@ function Home() {
 
   return (
     <View style={styles.homeContainer}>
-      <FlagWidget current={current} flagCount={meter.numerator} />
+      <BeatWidget
+        isStarted={isStarted}
+        beatState={beatState}
+        beatCount={meter.numerator}
+      />
 
       <View
         style={{

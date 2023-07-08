@@ -30,9 +30,30 @@ export async function prepareSounds() {
   }
 }
 
+export async function setSoundsRate(rate: number) {
+  console.log(rate);
+  soundAudios.high?.setRateAsync(rate, true);
+  soundAudios.mid?.setRateAsync(rate, true);
+  soundAudios.low?.setRateAsync(rate, true);
+}
+
 export async function unloadSounds() {
   console.log("unloading");
-  await soundAudios.high?.unloadAsync();
-  await soundAudios.mid?.unloadAsync();
-  await soundAudios.low?.unloadAsync();
+  Object.values(soundAudios).forEach((s) => {
+    if (s) s.unloadAsync();
+  });
+}
+
+export async function playMidSound() {
+  soundAudios.low?.stopAsync();
+
+  await soundAudios.mid?.playAsync();
+  soundAudios.mid?.setPositionAsync(0);
+}
+
+export async function playLowSound() {
+  soundAudios.mid?.stopAsync();
+
+  await soundAudios.low?.playAsync();
+  soundAudios.low?.setPositionAsync(0);
 }
