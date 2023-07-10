@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   outerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    height: 150,
+    height: 120,
     backgroundColor: DARK_THEME.surface0,
     width: Dimensions.get("window").width * 0.9,
     borderRadius: 15,

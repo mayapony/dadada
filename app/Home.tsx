@@ -88,28 +88,18 @@ function Home() {
         beatState={beatState}
         beatCount={meter.numerator}
       />
-
-      <View
-        style={{
-          gap: 25,
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-        }}
+      <FileWidget />
+      <MeterWidget handleUpdateMeter={setMeter} meter={meter} />
+      <PatternWidget pattern={pattern} handleUpdatePattern={setPattern} />
+      <TempoWidget tempo={tempo} setTempo={setTempo} />
+      <TouchableOpacity
+        style={styles.switchButton}
+        onPressIn={handleStartPress}
       >
-        <FileWidget />
-        <MeterWidget handleUpdateMeter={setMeter} meter={meter} />
-        <PatternWidget pattern={pattern} handleUpdatePattern={setPattern} />
-        <TempoWidget tempo={tempo} setTempo={setTempo} />
-        <TouchableOpacity
-          style={styles.switchButton}
-          onPressIn={handleStartPress}
-        >
-          <Text style={styles.switchButtonText}>
-            {isStarted ? "暂 停" : "开 始"}
-          </Text>
-        </TouchableOpacity>
-      </View>
+        <Text style={styles.switchButtonText}>
+          {isStarted ? "暂 停" : "开 始"}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
