@@ -14,16 +14,10 @@ function BeatWidget({
   isStarted: boolean;
 }) {
   const flags = Array.from({ length: beatCount }, (_, i) => i + 1);
-  const radio = 0.18;
 
   useEffect(() => {
-    async function playSound() {
-      beatState.currentSlice === 1
-        ? await playMidSound()
-        : await playLowSound();
-    }
     if (isStarted) {
-      playSound();
+      beatState.currentSlice === 1 ? playMidSound() : playLowSound();
     }
   }, [beatState, isStarted]);
 
@@ -32,16 +26,12 @@ function BeatWidget({
       {flags.map((number) => {
         return (
           <View
-            style={
-              statedStyle(radio, beatState.currentBeat === number).iconContainer
-            }
+            style={statedStyle(beatState.currentBeat === number).iconContainer}
             id={`block-${number}`}
             key={number}
           >
             <Text
-              style={
-                statedStyle(radio, beatState.currentBeat === number).iconText
-              }
+              style={statedStyle(beatState.currentBeat === number).iconText}
             >
               {number}
             </Text>

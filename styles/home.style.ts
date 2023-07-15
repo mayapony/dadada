@@ -1,7 +1,7 @@
 import { Dimensions, StyleSheet } from "react-native";
 import { DARK_THEME } from "../constants/theme";
 
-export const statedStyle = (radio: number, active: boolean) => {
+export const statedStyle = (active: boolean) => {
   return StyleSheet.create({
     iconContainer: {
       borderColor: active ? DARK_THEME.pink : DARK_THEME.base,

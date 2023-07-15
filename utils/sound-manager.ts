@@ -1,7 +1,7 @@
-import highSoundFile from "assets/sounds/metronome.mp3";
-import midSoundFile from "assets/sounds/metronome1.mp3";
-import lowSoundFile from "assets/sounds/metronome2.mp3";
-import { Audio } from "expo-av";
+import highSoundFile from "assets/sounds/high.mp3";
+import lowSoundFile from "assets/sounds/low.mp3";
+import midSoundFile from "assets/sounds/mid.mp3";
+import { AVPlaybackStatusSuccess, Audio } from "expo-av";
 import { Sound } from "expo-av/build/Audio";
 
 type SoundAudioType = {
@@ -30,14 +30,21 @@ export async function prepareSounds() {
   }
 }
 
-export async function setSoundsRate(rate: number) {
-  console.log(rate);
-  soundAudios.high?.setRateAsync(rate, true);
-  soundAudios.mid?.setRateAsync(rate, true);
-  soundAudios.low?.setRateAsync(rate, true);
+export async function setSoundsRate(intervalTime: number) {
+  if (!isAudioLoaded()) return;
+
+  const midStatus =
+    (await soundAudios.mid?.getStatusAsync()) as AVPlaybackStatusSuccess;
+  const lowStatus =
+    (await soundAudios.low?.getStatusAsync()) as AVPlaybackStatusSuccess;
+  const midRate = (midStatus.durationMillis ?? intervalTime) / intervalTime;
+  const lowRate = (lowStatus.durationMillis ?? intervalTime) / intervalTime;
+
+  await soundAudios.mid?.setRateAsync(midRate, true);
+  await soundAudios.low?.setRateAsync(lowRate, true);
 }
 
-export async function unloadSounds() {
+export function unloadSounds() {
   console.log("unloading");
   Object.values(soundAudios).forEach((s) => {
     if (s) s.unloadAsync();
@@ -56,4 +63,14 @@ export async function playLowSound() {
 
   await soundAudios.low?.playAsync();
   soundAudios.low?.setPositionAsync(0);
+}
+
+function isAudioLoaded(): boolean {
+  Object.values(soundAudios).forEach((s) => {
+    if (!s) {
+      console.log("audio not loaded");
+      return false;
+    }
+  });
+  return true;
 }
