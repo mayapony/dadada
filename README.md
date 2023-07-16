@@ -4,9 +4,11 @@
 
 音效来自 [jsfxr](https://sfxr.me/)
 
-[下载地址](https://mayapony.lanzoub.com/iaIp810jtc6d)
+[下载地址](https://mayapony.lanzoub.com/b01f2mo9e) 密码：6666
 
-<img src="./doc/Screenshot.jpg" height="400" />
+[Expo下载地址](https://expo.dev/artifacts/eas/sPY2M1PbuFRvovgW7L6ZPf.apk)
+
+<img src="./doc/Screenshot.jpg" height="500" />
 
 <br />
 
