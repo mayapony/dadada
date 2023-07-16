@@ -11,7 +11,7 @@ import { styles } from "styles/home.style";
 import { BeatState } from "types/beat.interface";
 import { Meter } from "types/meter.interface";
 import { bpmToMs } from "utils/index";
-import { prepareSounds, setSoundsRate } from "utils/sound-manager";
+import { prepareSounds } from "utils/sound-manager";
 
 const initBeatState: BeatState = {
   currentBeat: 1,
@@ -29,8 +29,6 @@ function Home() {
   useEffect(() => {
     setBeatState(initBeatState);
     if (isStarted) {
-      const intervalTime = bpmToMs(tempo) / pattern.value;
-      setSoundsRate(intervalTime);
       updateInterval();
     }
   }, [meter, pattern, tempo]);
@@ -45,8 +43,6 @@ function Home() {
     } else {
       // else then start
       await prepareSounds();
-      const intervalTime = bpmToMs(tempo) / pattern.value;
-      setSoundsRate(intervalTime);
       setIsStarted((is) => !is);
       updateInterval();
     }
