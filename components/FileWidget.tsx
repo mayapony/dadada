@@ -1,10 +1,32 @@
 import { Entypo } from "@expo/vector-icons";
 import { DARK_THEME } from "constants/theme";
+import { findRecords, insertRecord } from "../db";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "styles/file-widget.style";
+import { Meter } from "types/meter.interface";
 
-function FileWidget() {
+type FileWidgetProps = {
+  tempo: number;
+  meter: Meter;
+  pattern: number;
+};
+
+function FileWidget({ tempo, meter, pattern }: FileWidgetProps) {
+  function handleSaveRecord() {
+    console.log("handle save");
+    insertRecord(tempo, meter, pattern);
+  }
+
+  function handleListRecord() {
+    console.log("handle list");
+    findRecords((row) => {
+      for (let i = 0; i < row.length; i++) {
+        console.log(row.item(i));
+      }
+    });
+  }
+
   return (
     <View style={styles.outerContainer}>
       <TouchableOpacity style={styles.columnContainer}>
@@ -17,9 +39,13 @@ function FileWidget() {
         </View>
         <View style={styles.centerBottomContainer}>
           <Entypo name="trash" size={20} color={DARK_THEME.maroon} />
-          <Entypo name="list" size={20} color={DARK_THEME.text} />
+          <TouchableOpacity onPress={handleListRecord}>
+            <Entypo name="list" size={20} color={DARK_THEME.text} />
+          </TouchableOpacity>
           <Entypo name="add-to-list" size={20} color={DARK_THEME.text} />
-          <Entypo name="save" size={20} color={DARK_THEME.text} />
+          <TouchableOpacity onPress={handleSaveRecord}>
+            <Entypo name="save" size={20} color={DARK_THEME.text} />
+          </TouchableOpacity>
         </View>
       </View>
       <TouchableOpacity style={styles.columnContainer}>

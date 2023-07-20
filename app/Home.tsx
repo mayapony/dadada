@@ -5,6 +5,7 @@ import PatternWidget from "components/PatternWidget";
 import TempoWidget from "components/TempoWidget";
 import { METERS } from "constants/meters";
 import { PATTERNS } from "constants/patterns";
+import { initRecordTable } from "db/index";
 import React, { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "styles/home.style";
@@ -32,6 +33,10 @@ function Home() {
       updateInterval();
     }
   }, [meter, pattern, tempo]);
+
+  useEffect(() => {
+    initRecordTable();
+  }, []);
 
   async function handleStartPress() {
     // if started then stop
@@ -80,7 +85,7 @@ function Home() {
         beatState={beatState}
         beatCount={meter.numerator}
       />
-      <FileWidget />
+      <FileWidget tempo={tempo} meter={meter} pattern={pattern.value} />
       <MeterWidget handleUpdateMeter={setMeter} meter={meter} />
       <PatternWidget pattern={pattern} handleUpdatePattern={setPattern} />
       <TempoWidget tempo={tempo} setTempo={setTempo} />
