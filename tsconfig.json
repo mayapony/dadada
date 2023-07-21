@@ -17,5 +17,5 @@
     "typeRoots": ["types/"]
   },
   "extends": "expo/tsconfig.base",
-  "exclude": ["node_modules", ".vscode"]
+  "exclude": ["node_modules", ".vscode", "*.cjs", "*.js"]
 }

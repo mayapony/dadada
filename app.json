@@ -3,9 +3,6 @@
     "android": {
       "package": "com.maya.dadada"
     },
-    "androidNavigationBar": {
-      "backgroundColor": "#1e1e2e"
-    },
     "description": "A metronome APP for simple use",
     "extra": {
       "eas": {
