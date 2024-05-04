@@ -1,20 +1,11 @@
-// source: https://typescript-eslint.io/getting-started/
 {
-  "env": {
-    "react-native/react-native": true,
-    "browser": true,
-    "es2021": true,
-    "node": true
-  },
-  "plugins": ["react", "react-native", "@typescript-eslint"],
+  "root": true,
   "parserOptions": {
-    "sourceType": "module",
-    "ecmaVersion": "latest",
     "ecmaFeatures": {
       "jsx": true
     }
   },
-  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   "parser": "@typescript-eslint/parser",
-  "root": true
+  "plugins": ["@typescript-eslint", "react", "react-native"],
+  "extends": ["plugin:@typescript-eslint/recommended", "plugin:react-hooks/recommended"]
 }

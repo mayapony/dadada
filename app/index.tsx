@@ -1,3 +1,4 @@
+import React from "react";
 import Entypo from "@expo/vector-icons/Entypo";
 import { DARK_THEME } from "constants/theme";
 import * as Font from "expo-font";
