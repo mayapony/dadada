@@ -5,15 +5,14 @@ import TempoWidget from "components/TempoWidget";
 import { METERS } from "constants/meters";
 import { PATTERNS } from "constants/patterns";
 import { DARK_THEME } from "constants/theme";
-import { initRecordTable } from "db/index";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { setBackgroundColorAsync } from "expo-system-ui";
+import React, { useEffect, useState } from "react";
 import { Platform, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "styles/home.style";
 import { BeatState } from "types/beat.interface";
 import { Meter } from "types/meter.interface";
 import { bpmToMs } from "utils/index";
 import { prepareSounds } from "utils/sound-manager";
-import { setBackgroundColorAsync } from "expo-system-ui";
 
 const initBeatState: BeatState = {
   currentBeat: 1,
@@ -40,10 +39,6 @@ function Home() {
   }
 
   useEffect(function initState() {
-    // init database
-    initRecordTable();
-
-    // set navigator bar background color
     if (Platform.OS === "android") {
       // setBackgroundColorAsync(DARK_THEME.base);
       setBackgroundColorAsync(DARK_THEME.base);

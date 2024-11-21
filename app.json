@@ -20,6 +20,9 @@
     "web": {
       "bundler": "metro"
     },
-    "plugins": []
+    "plugins": [
+      "expo-font",
+      "expo-router"
+    ]
   }
 }
