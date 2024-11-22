@@ -1,18 +1,69 @@
+import BeatStyleWidget from "components/BeatStyleWidget";
 import BeatWidget from "components/BeatWidget";
-import MeterWidget from "components/MeterWidget";
-import PatternWidget from "components/PatternWidget";
-import TempoWidget from "components/TempoWidget";
-import { METERS } from "constants/meters";
-import { PATTERNS } from "constants/patterns";
+import BPMWidget from "components/BMPWidget";
+import TimeSignatureWidget from "components/TimeSignatureWidget";
 import { DARK_THEME } from "constants/theme";
 import { setBackgroundColorAsync } from "expo-system-ui";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { Platform, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "styles/home.style";
 import { BeatState } from "types/beat.interface";
-import { Meter } from "types/meter.interface";
+import { MetronomeAction, MetronomeState } from "types/metronome";
 import { bpmToMs } from "utils/index";
 import { prepareSounds } from "utils/sound-manager";
+
+const defaultMetronomeState: MetronomeState = {
+  currentBeat: 1,
+  subdivision: 1,
+  bpm: 120,
+  timeSignature: { numerator: 4, denominator: 4 },
+  beatStyle: { value: 1, iconSource: 0 },
+};
+
+function metronomeReducer(
+  state: MetronomeState,
+  action: MetronomeAction
+): MetronomeState {
+  switch (action.type) {
+    case "UPDATE_CURRENT_BEAT":
+      return {
+        ...state,
+        currentBeat: action.payload.beat,
+        subdivision: action.payload.subdivision,
+      };
+
+    case "UPDATE_BPM":
+      return {
+        ...state,
+        bpm: action.payload.bpm,
+      };
+
+    case "UPDATE_TIME_SIGNATURE":
+      return {
+        ...state,
+        timeSignature: {
+          numerator: action.payload.numerator,
+          denominator: action.payload.denominator,
+        },
+      };
+
+    case "UPDATE_BEAT_STYLE":
+      return {
+        ...state,
+        beatStyle: {
+          value: action.payload.value,
+          iconSource: action.payload.iconSource,
+        },
+      };
+
+    case "RESET":
+      return defaultMetronomeState;
+
+    default:
+      const unkonwnAction = action as { type: string };
+      throw new Error(`Unhandled action type: ${unkonwnAction.type}`);
+  }
+}
 
 const initBeatState: BeatState = {
   currentBeat: 1,
@@ -21,10 +72,11 @@ const initBeatState: BeatState = {
 
 function Home() {
   const [beatState, setBeatState] = useState<BeatState>(initBeatState);
-  const [tempo, setTempo] = useState(60);
   const [isStarted, setIsStarted] = useState(false);
-  const [meter, setMeter] = useState<Meter>(METERS[3]);
-  const [pattern, setPattern] = useState(PATTERNS[0]);
+  const [metronomeState, metronomeDispatch] = useReducer(
+    metronomeReducer,
+    defaultMetronomeState
+  );
 
   async function handleStartPress() {
     // if started then stop
@@ -50,14 +102,16 @@ function Home() {
     let timer: null | number = null;
 
     if (isStarted) {
-      console.log(bpmToMs(tempo) / pattern.value);
+      console.log(bpmToMs(metronomeState.bpm) / metronomeState.beatStyle.value);
       timer = setInterval(
         () => {
           setBeatState((bs) => {
-            if (bs.currentSlice >= pattern.value) {
+            if (bs.currentSlice >= metronomeState.beatStyle.value) {
               return {
                 currentBeat:
-                  bs.currentBeat + 1 > meter.numerator ? 1 : bs.currentBeat + 1,
+                  bs.currentBeat + 1 > metronomeState.timeSignature.numerator
+                    ? 1
+                    : bs.currentBeat + 1,
                 currentSlice: 1,
               };
             }
@@ -67,7 +121,7 @@ function Home() {
             };
           });
         },
-        bpmToMs(tempo) / pattern.value,
+        bpmToMs(metronomeState.bpm) / metronomeState.beatStyle.value
       );
     } else {
       if (timer != null) clearInterval(timer);
@@ -76,18 +130,24 @@ function Home() {
     return () => {
       if (timer != null) clearInterval(timer);
     };
-  }, [isStarted, meter.numerator, pattern.value, tempo]);
+  }, [isStarted, metronomeState]);
 
   return (
     <View style={styles.homeContainer}>
       <BeatWidget
         isStarted={isStarted}
         beatState={beatState}
-        beatCount={meter.numerator}
+        beatCount={metronomeState.timeSignature.numerator}
       />
-      <MeterWidget handleUpdateMeter={setMeter} meter={meter} />
-      <PatternWidget pattern={pattern} handleUpdatePattern={setPattern} />
-      <TempoWidget tempo={tempo} setTempo={setTempo} />
+      <TimeSignatureWidget
+        dispatch={metronomeDispatch}
+        timeSignature={metronomeState.timeSignature}
+      />
+      <BeatStyleWidget
+        dispatch={metronomeDispatch}
+        beatStyle={metronomeState.beatStyle}
+      />
+      <BPMWidget dispatch={metronomeDispatch} bpm={metronomeState.bpm} />
       <TouchableOpacity
         style={styles.switchButton}
         onPressIn={handleStartPress}

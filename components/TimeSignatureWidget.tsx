@@ -2,14 +2,14 @@ import { METERS } from "constants/meters";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { statedStyle, styles } from "styles/meter-widget.style";
-import { Meter } from "types/meter.interface";
+import { MetronomeAction, TimeSignature } from "types/metronome";
 
-type MeterWidgetProps = {
-  handleUpdateMeter: (meter: Meter) => void;
-  meter: Meter;
-};
+interface MeterWidgetProps {
+  timeSignature: TimeSignature;
+  dispatch: React.Dispatch<MetronomeAction>;
+}
 
-function MeterWidget({ handleUpdateMeter, meter }: MeterWidgetProps) {
+function TimeSignatureWidget({ timeSignature, dispatch }: MeterWidgetProps) {
   return (
     <View style={styles.outerContainer}>
       {METERS.map((m) => {
@@ -18,12 +18,18 @@ function MeterWidget({ handleUpdateMeter, meter }: MeterWidgetProps) {
             key={m.numerator + m.numerator}
             style={
               statedStyle(
-                meter.numerator === m.numerator &&
-                  meter.denominator === m.denominator
+                timeSignature.numerator === m.numerator &&
+                  timeSignature.denominator === m.denominator
               ).itemContainer
             }
             onPress={() => {
-              handleUpdateMeter(m);
+              dispatch({
+                type: "UPDATE_TIME_SIGNATURE",
+                payload: {
+                  numerator: m.numerator,
+                  denominator: m.denominator,
+                },
+              });
             }}
           >
             <Text
@@ -36,4 +42,4 @@ function MeterWidget({ handleUpdateMeter, meter }: MeterWidgetProps) {
   );
 }
 
-export default MeterWidget;
+export default TimeSignatureWidget;

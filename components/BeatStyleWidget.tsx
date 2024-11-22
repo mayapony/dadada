@@ -2,23 +2,29 @@ import { PATTERNS } from "constants/patterns";
 import React from "react";
 import { Image, TouchableOpacity, View } from "react-native";
 import { statedStyle, styles } from "styles/pattern-widget.style";
-import { PatternIcon } from "types/pattern-icon.interface";
+import { BeatStyle, MetronomeAction } from "types/metronome";
 
-type PatternWidgetProps = {
-  handleUpdatePattern: (pattern: PatternIcon) => void;
-  pattern: PatternIcon;
-};
+interface BeatStyleWidgetProps {
+  dispatch: React.Dispatch<MetronomeAction>;
+  beatStyle: BeatStyle;
+}
 
-function PatternWidget({ pattern, handleUpdatePattern }: PatternWidgetProps) {
+function BeatStyleWidget({ beatStyle, dispatch }: BeatStyleWidgetProps) {
   return (
     <View style={styles.container}>
       {PATTERNS.map((p, index) => {
         return (
           <TouchableOpacity
             key={index}
-            style={statedStyle(pattern.value === p.value).iconContainer}
+            style={statedStyle(beatStyle.value === p.value).iconContainer}
             onPress={() => {
-              handleUpdatePattern(p);
+              dispatch({
+                type: "UPDATE_BEAT_STYLE",
+                payload: {
+                  value: p.value,
+                  iconSource: p.iconSource,
+                },
+              });
             }}
           >
             <Image
@@ -33,4 +39,4 @@ function PatternWidget({ pattern, handleUpdatePattern }: PatternWidgetProps) {
   );
 }
 
-export default PatternWidget;
+export default BeatStyleWidget;
