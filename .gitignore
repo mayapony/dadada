@@ -17,3 +17,6 @@ web-build/
 .vscode
 
 cspell.json
+
+android
+ios

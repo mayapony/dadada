@@ -22,7 +22,12 @@
     },
     "plugins": [
       "expo-font",
-      "expo-router"
-    ]
+      "expo-router",
+      "expo-sqlite"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.maya.dadada"
+    },
+    "jsEngine": "hermes"
   }
 }
