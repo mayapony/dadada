@@ -23,7 +23,15 @@
     "plugins": [
       "expo-font",
       "expo-router",
-      "expo-sqlite"
+      "expo-sqlite",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "extraMavenRepos": ["https://maven.aliyun.com/repository/public/", "https://maven.aliyun.com/repository/central"]
+          }
+        }
+      ]
     ],
     "ios": {
       "bundleIdentifier": "com.maya.dadada"
