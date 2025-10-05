@@ -7,7 +7,6 @@ import { SplashScreen, Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native";
 import { styles } from "styles/home.style";
-import { TamaguiProvider, Theme } from "tamagui";
 import config from "../tamagui.config";
 import Home from "./Home";
 
@@ -48,23 +47,19 @@ export default function App() {
   }
 
   return (
-    <TamaguiProvider config={config}>
-      <Theme name="dark">
-        <SafeAreaView style={styles.homeArea}>
-          <Stack.Screen
-            options={{
-              headerTitle: "DADADA 🌸",
-              headerShadowVisible: false,
-              headerTitleAlign: "center",
-              headerTintColor: DARK_THEME.text,
-              headerStyle: {
-                backgroundColor: DARK_THEME.base,
-              },
-            }}
-          />
-          <Home />
-        </SafeAreaView>
-      </Theme>
-    </TamaguiProvider>
+    <SafeAreaView style={styles.homeArea}>
+      <Stack.Screen
+        options={{
+          headerTitle: "DADADA 🌸",
+          headerShadowVisible: false,
+          headerTitleAlign: "center",
+          headerTintColor: DARK_THEME.text,
+          headerStyle: {
+            backgroundColor: DARK_THEME.base,
+          },
+        }}
+      />
+      <Home />
+    </SafeAreaView>
   );
 }
