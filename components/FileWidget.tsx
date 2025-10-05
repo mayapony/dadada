@@ -1,5 +1,4 @@
 import { Entypo } from "@expo/vector-icons";
-import { Sheet } from "@tamagui/sheet";
 import { DARK_THEME } from "constants/theme";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -58,29 +57,7 @@ function FileWidget({ tempo, meter, pattern }: FileWidgetProps) {
         </TouchableOpacity>
       </View>
 
-      <Sheet
-        forceRemoveScrollEnabled={open}
-        modal={true}
-        open={true}
-        onOpenChange={setOpen}
-        snapPoints={[85, 50, 25]}
-        dismissOnSnapToBottom
-        position={position}
-        onPositionChange={setPosition}
-        zIndex={100_000}
-      >
-        <Sheet.Overlay />
-        <Sheet.Handle />
-        <Sheet.Frame
-          flex={1}
-          padding="$4"
-          justifyContent="center"
-          alignItems="center"
-          space="$5"
-        >
-          <Text>Hello World</Text>
-        </Sheet.Frame>
-      </Sheet>
+      {/* Sheet */}
     </>
   );
 }

@@ -7,7 +7,6 @@ import { SplashScreen, Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native";
 import { styles } from "styles/home.style";
-import config from "../tamagui.config";
 import Home from "./Home";
 
 function cacheFonts(fonts: string[] | Record<string, string>[]) {
@@ -37,10 +36,7 @@ export default function App() {
     loadResourcesAndDataAsync();
   }, []);
 
-  const [loaded] = useFonts({
-    Inter: require("@tamagui/font-inter/otf/Inter-Medium.otf"),
-    InterBold: require("@tamagui/font-inter/otf/Inter-Bold.otf"),
-  });
+  const [loaded] = useFonts({});
 
   if (!loaded || !appIsReady) {
     return null;
