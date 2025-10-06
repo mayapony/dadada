@@ -18,5 +18,5 @@ web-build/
 
 cspell.json
 
-android
-ios
+/android
+/ios
