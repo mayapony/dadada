@@ -7,7 +7,8 @@
       "constants/*": ["constants/*"],
       "styles/*": ["styles/*"],
       "utils/*": ["utils/*"],
-      "db/*": ["db/*"]
+      "db/*": ["db/*"],
+      "modules/*": ["modules/*"],
     },
     "allowJs": true,
     "esModuleInterop": true,
